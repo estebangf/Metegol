@@ -2,14 +2,16 @@
 #include <Adafruit_NeoPixel.h>
 #include <Servo.h>
 
+#include "Monedero.h"
 #include "SensorUS.h"
 #include "Display8.h"
+#include "Pulsador.h"
+#include "Led.h"
 
 #define ECHO_1 3 // attach pin D2 Arduino to pin Echo of HC-SR04
 #define TRIG_1 4 // attach pin D3 Arduino to pin Trig of HC-SR04
 #define ECHO_2 34
 #define TRIG_2 33
-#define BUTTON = 2;
 
 #define En1 = 13;
 #define A = 12;
@@ -31,10 +33,22 @@
 #define g = 29;
 #define h = 52;
 
+#define NEW_CREDIT = 2;    // Pin digital para la interrupción (INT0)
+#define ADD_CREDIT = 2;    // Pin digital para la interrupción (INT0)
+#define REMOVE_CREDIT = 3; // Pin digital para el botón que elimina un crédito
+
+#define ARCADE = 2;     // Pin digital para la interrupción (INT0)
+#define ARCADE_LED = 2; // Pin digital para la interrupción (INT0)
+
+Monedero MyMonedero;
+
 Servo MyServo;
 
 SensorUs Sensor_1;
 SensorUs Sensor_2;
+
+Pulsador Arcade;
+Led ArcadeLed;
 
 Display8 Display_1;
 Display8 Display_2;
@@ -50,7 +64,11 @@ int counter_2 = 0;
 
 void setup()
 {
-  pinMode(BUTTON, INPUT);
+  Arcade.begin(ARCADE, INPUT);
+  ArcadeLed.begin(ARCADE_LED);
+
+  MyMonedero.begin(NEW_CREDIT, ADD_CREDIT, REMOVE_CREDIT);
+  attachInterrupt(digitalPinToInterrupt(pinAddCredit), MyMonedero.servicesAdd, RISING);
 
   MyServo.attach(14);
 
@@ -60,11 +78,18 @@ void setup()
   Display_1.begin(En1, A, B, C, D, E, F, G, H);
   Display_1.begin(En2, a, b, c, d, e, f, g, h);
 
-  Pixels_1.begin(); // Initializes the NeoPixel library.
-  Pixels_2.begin();
-  Pixels_3.begin();
+  Pixels_1.begin();
+  Pixels_1.setBrightness(50);
+  Pixels_1.show(); // Initialize all pixels to 'off'
 
-  Serial.begin(9600);
+  Pixels_2.begin();
+  Pixels_2.setBrightness(50);
+  Pixels_2.show(); // Initialize all pixels to 'off'
+
+  Pixels_3.begin();
+  Pixels_3.setBrightness(50);
+  Pixels_3.show(); // Initialize all pixels to 'off'
+
   neo();
 
   zero();
@@ -73,6 +98,23 @@ void setup()
 
 void loop()
 {
+  MyMonedero.loop();
+
+  if(MyMonedero > 0) {
+    ArcadeLed.high();
+  } else {
+    ArcadeLed.low();
+  }
+
+  if (Arcade.detectShortPressed())
+  {
+    neo();
+    counter_1 = 0;
+    counter_2 = 0;
+    Display_1.show(counter_1);
+    Display_1.show(counter_2);
+  }
+
   if (Sensor_1 < 20)
   {
     neo1();
@@ -94,18 +136,9 @@ void loop()
     MyServo.write(0);
     delay(600);
   }
-
-  if (digitalRead(BUTTON) == 1)
-  {
-    neo();
-    counter_1 = 0;
-    counter_2 = 0;
-    Display_1.show(counter_1);
-    Display_1.show(counter_2);
-  }
 }
 
-void neo(void)
+void neo()
 {
   for (int i = 0; i < 20; i++)
   {
@@ -122,7 +155,7 @@ void neo(void)
   Pixels_1.show();
 }
 
-void neo1(void)
+void neo1()
 {
   for (int i = 0; i < 8; i++)
   {
@@ -139,7 +172,7 @@ void neo1(void)
   Pixels_2.show();
 }
 
-void neo2(void)
+void neo2()
 {
   for (int i = 0; i < 8; i++)
   {

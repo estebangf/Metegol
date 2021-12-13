@@ -8,6 +8,7 @@
 #include "Pulsador.h"
 #include "Led.h"
 #include "Game.h"
+#include "TiraLed.h"
 
 const uint8_t UMBRAL_POINT = 20;
 
@@ -59,12 +60,9 @@ Display8 Display_1(En2, a, b, c, d, e, f, g, h);
 Servo MyServo;
 
 //byte digitPin[5] = {A0,A1,A2,A3,A4};
-Adafruit_NeoPixel Pixels_1 = Adafruit_NeoPixel(20, 36, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel Pixels_2 = Adafruit_NeoPixel(8, 5, NEO_GRB + NEO_KHZ800);
-Adafruit_NeoPixel Pixels_3 = Adafruit_NeoPixel(8, 31, NEO_GRB + NEO_KHZ800);
-
-// defines variables
-Game MyGame;
+TiraLed TiraLed_1 = TiraLed(8, 5, NEO_GRB + NEO_KHZ800);
+TiraLed TiraLed_2 = TiraLed(8, 31, NEO_GRB + NEO_KHZ800);
+TiraLed TiraLed_3 = TiraLed(20, 36, NEO_GRB + NEO_KHZ800);
 
 void setup()
 {
@@ -84,22 +82,9 @@ void setup()
   Display_1.begin();
   Display_1.begin();
 
-  Pixels_1.begin();
-  Pixels_1.setBrightness(50);
-  Pixels_1.show(); // Initialize all pixels to 'off'
-
-  Pixels_2.begin();
-  Pixels_2.setBrightness(50);
-  Pixels_2.show(); // Initialize all pixels to 'off'
-
-  Pixels_3.begin();
-  Pixels_3.setBrightness(50);
-  Pixels_3.show(); // Initialize all pixels to 'off'
-
-  neo();
-
-  zero();
-  zero1();
+  TiraLed_1.begin();
+  TiraLed_2.begin();
+  TiraLed_3.begin();
 }
 
 void loop()
@@ -111,6 +96,10 @@ void loop()
     Display_1.show();
     Display_1.show();
 
+    TiraLed_1.apagar();
+    TiraLed_2.apagar();
+    TiraLed_3.apagar();
+    
     if (MyMonedero > 0)
     {
       ArcadeLed.high();
@@ -118,6 +107,7 @@ void loop()
       {
         neo();
         MyGame.start();
+        TiraLed_1.encender();
         MyMonedero.subtractCredit();
       }
     }
@@ -128,16 +118,20 @@ void loop()
   }
   else
   {
+    TiraLed_1.loop();
+    TiraLed_2.loop();
+    TiraLed_3.encender();
+
     if (Sensor_1 < UMBRAL_POINT)
     {
-      neo1();
       MyGame.pointForPlayerOne();
+      TiraLed_1.destellar(5, 500);
     }
 
     if (Sensor_2 < UMBRAL_POINT)
     {
-      neo2();
       MyGame.pointForPlayerTwo();
+      TiraLed_2.destellar(5, 500);
     }
 
     if (!MyGame.inProgress())
@@ -148,55 +142,4 @@ void loop()
     Display_1.show(MyGame.getPlayerOnePoints());
     Display_2.show(MyGame.getPlayerTwoPoints());
   }
-}
-
-void neo()
-{
-  for (int i = 0; i < 20; i++)
-  {
-    // pixels.Color takes RGB values, from 0,0,0 up to 255,255,255
-    Pixels_1.setPixelColor(i, Pixels_1.Color(255, 0, 0)); // Moderately bright green color.
-  }
-  Pixels_1.show();
-  delay(1000);
-  for (int i = 0; i < 20; i++)
-  {
-    // pixels.Color takes RGB values, from 0,0,0 up to 255,255,255
-    Pixels_1.setPixelColor(i, Pixels_1.Color(0, 0, 0)); // Moderately bright green color.
-  }
-  Pixels_1.show();
-}
-
-void neo1()
-{
-  for (int i = 0; i < 8; i++)
-  {
-    // pixels.Color takes RGB values, from 0,0,0 up to 255,255,255
-    Pixels_2.setPixelColor(i, Pixels_2.Color(255, 0, 0)); // Moderately bright green color.
-  }
-  Pixels_2.show();
-  delay(1000);
-  for (int i = 0; i < 8; i++)
-  {
-    // pixels.Color takes RGB values, from 0,0,0 up to 255,255,255
-    Pixels_2.setPixelColor(i, Pixels_2.Color(0, 0, 0)); // Moderately bright green color.
-  }
-  Pixels_2.show();
-}
-
-void neo2()
-{
-  for (int i = 0; i < 8; i++)
-  {
-    // pixels.Color takes RGB values, from 0,0,0 up to 255,255,255
-    Pixels_3.setPixelColor(i, Pixels_3.Color(255, 0, 0)); // Moderately bright green color.
-  }
-  Pixels_3.show();
-  delay(1000);
-  for (int i = 0; i < 8; i++)
-  {
-    // pixels.Color takes RGB values, from 0,0,0 up to 255,255,255
-    Pixels_3.setPixelColor(i, Pixels_3.Color(0, 0, 0)); // Moderately bright green color.
-  }
-  Pixels_3.show();
 }

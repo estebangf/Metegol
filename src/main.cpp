@@ -7,6 +7,7 @@
 #include "Display8.h"
 #include "Pulsador.h"
 #include "Led.h"
+#include "Game.h"
 
 #define ECHO_1 3 // attach pin D2 Arduino to pin Echo of HC-SR04
 #define TRIG_1 4 // attach pin D3 Arduino to pin Trig of HC-SR04
@@ -33,12 +34,12 @@
 #define g = 29;
 #define h = 52;
 
-#define NEW_CREDIT = 2;    // Pin digital para la interrupción (INT0)
-#define ADD_CREDIT = 2;    // Pin digital para la interrupción (INT0)
-#define REMOVE_CREDIT = 3; // Pin digital para el botón que elimina un crédito
+#define NEW_CREDIT = 2;
+#define ADD_CREDIT = 2;
+#define REMOVE_CREDIT = 3;
 
-#define ARCADE = 2;     // Pin digital para la interrupción (INT0)
-#define ARCADE_LED = 2; // Pin digital para la interrupción (INT0)
+#define ARCADE = 2;
+#define ARCADE_LED = 2;
 
 Monedero MyMonedero;
 
@@ -59,8 +60,7 @@ Adafruit_NeoPixel Pixels_2 = Adafruit_NeoPixel(8, 5, NEO_GRB + NEO_KHZ800);
 Adafruit_NeoPixel Pixels_3 = Adafruit_NeoPixel(8, 31, NEO_GRB + NEO_KHZ800);
 
 // defines variables
-int counter_1 = 0;
-int counter_2 = 0;
+Game MyGame;
 
 void setup()
 {
@@ -94,48 +94,43 @@ void setup()
 
   zero();
   zero1();
+
+  MyGame.begin(9);
 }
 
 void loop()
 {
   MyMonedero.loop();
 
-  if(MyMonedero > 0) {
-    ArcadeLed.high();
-  } else {
-    ArcadeLed.low();
-  }
-
-  if (Arcade.detectShortPressed())
+  if (MyMonedero > 0 && MyGame.inProgress())
   {
-    neo();
-    counter_1 = 0;
-    counter_2 = 0;
-    Display_1.show(counter_1);
-    Display_1.show(counter_2);
+    ArcadeLed.high();
+  }
+  else
+  {
+    if (Arcade.detectShortPressed())
+    {
+      neo();
+      MyGame.start();
+    }
+
+    ArcadeLed.low();
   }
 
   if (Sensor_1 < 20)
   {
     neo1();
-    counter_1++;
-    Display_1.show(counter_1);
-    MyServo.write(90);
-    delay(1000);
-    MyServo.write(0);
-    delay(600);
+    MyGame.pointForPlayerOne();
   }
 
   if (Sensor_2 < 20)
   {
     neo2();
-    counter_2++;
-    Display_1.show(counter_2);
-    MyServo.write(90);
-    delay(1000);
-    MyServo.write(0);
-    delay(600);
+    MyGame.pointForPlayerTwo();
   }
+
+  Display_1.show(MyGame.getPlayerOnePoints());
+  Display_1.show(MyGame.getPlayerTwoPoints());
 }
 
 void neo()

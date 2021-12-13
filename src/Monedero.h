@@ -20,6 +20,6 @@ public:
   void begin(uint8_t pNew, uint8_t pAdd, uint8_t pRemove);
   bool operator>(uint8_t cant);
   bool operator<(uint8_t cant);
-  void Monedero::loop();
-  void Monedero::servicesNew();
+  void loop();
+  void servicesNew();
 };

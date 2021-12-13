@@ -17,7 +17,8 @@ private:
   Pulsador pulsadorRemove;
 
 public:
-  void begin(uint8_t pNew, uint8_t pAdd, uint8_t pRemove);
+  Monedero(uint8_t pNew, uint8_t pAdd, uint8_t pRemove);
+  void begin();
   bool operator>(uint8_t cant);
   bool operator<(uint8_t cant);
   void loop();

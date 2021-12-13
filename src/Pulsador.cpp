@@ -1,11 +1,15 @@
 #include <Arduino.h>
 #include <Pulsador.h>
 
-void Pulsador::begin(uint8_t btn, uint8_t mode)
+Pulsador::Pulsador(uint8_t btn)
 {
   STATES STATE_BUTTON = REPOSE;
   pin = btn;
-  pinMode(btn, mode);
+}
+
+void Pulsador::begin(uint8_t mode)
+{
+  pinMode(pin, mode);
 }
 
 bool Pulsador::detectShortPressed()

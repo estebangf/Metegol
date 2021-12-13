@@ -1,11 +1,14 @@
 #include <Arduino.h>
 #include <SensorUS.h>
 
-void SensorUS::begin(uint8_t trig, uint8_t echo)
+SensorUS::SensorUS(uint8_t trig, uint8_t echo)
 {
   pinTrig = trig;
   pinEcho = echo;
+}
 
+void SensorUS::begin()
+{
   pinMode(pinTrig, OUTPUT);
   pinMode(pinEcho, INPUT);
 }

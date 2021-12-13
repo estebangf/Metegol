@@ -16,7 +16,8 @@ private:
   uint8_t timeLastPoint;
 
 public:
-  void begin(uint8_t maxP);
+  Game(uint8_t maxP);
+  void begin();
   void start();
   void end();
   bool inProgress();

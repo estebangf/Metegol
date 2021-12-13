@@ -1,15 +1,19 @@
 #include <Arduino.h>
 #include <Game.h>
 
-void Game::begin(uint8_t maxP)
+Game::Game(uint8_t maxP)
+{
+  max_points = maxP;
+}
+
+void Game::begin()
 {
   points_1 = 0;
   points_2 = 0;
 
   in_play = false;
-
-  max_points = maxP;
-  uint8_t timeLastPoint = millis();
+  
+  uint8_t timeLastPoint = 0;
 }
 
 void Game::start()

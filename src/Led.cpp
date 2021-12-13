@@ -1,10 +1,13 @@
 #include <Arduino.h>
 #include <Led.h>
 
-void Led::begin(uint8_t p)
+Led::Led(uint8_t p)
 {
   pin = p;
+}
 
+void Led::begin()
+{
   pinMode(pin, OUTPUT);
 }
 

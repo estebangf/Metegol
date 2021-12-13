@@ -8,7 +8,8 @@ private:
   uint8_t pin;
 
 public:
-  void begin(uint8_t p);
+  Led(uint8_t p);
+  void begin();
   void high();
   void low();
 };

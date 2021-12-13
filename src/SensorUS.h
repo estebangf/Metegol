@@ -10,7 +10,8 @@ private:
   uint8_t pinEcho;
 
 public:
-  void begin(uint8_t trig, uint8_t echo);
+  SensorUS(uint8_t trig, uint8_t echo);
+  void begin();
   float distancia();
   bool operator>(float umbral);
 };

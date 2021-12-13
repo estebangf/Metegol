@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <Display8.h>
 
-void Display8::begin(uint8_t En, uint8_t a, uint8_t b, uint8_t c, uint8_t d, uint8_t e, uint8_t f, uint8_t g, uint8_t h)
+Display8::Display8(uint8_t En, uint8_t a, uint8_t b, uint8_t c, uint8_t d, uint8_t e, uint8_t f, uint8_t g, uint8_t h)
 {
   pinEn = En;
   pinA = a;
@@ -12,7 +12,10 @@ void Display8::begin(uint8_t En, uint8_t a, uint8_t b, uint8_t c, uint8_t d, uin
   pinF = f;
   pinG = g;
   pinH = h;
+}
 
+void Display8::begin()
+{
   pinMode(pinEn, OUTPUT);
   pinMode(pinA, OUTPUT);
   pinMode(pinB, OUTPUT);

@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include <Monedero.h>
 
-void Monedero::begin(uint8_t pNew, uint8_t pAdd, uint8_t pRemove)
+Monedero::Monedero(uint8_t pNew, uint8_t pAdd, uint8_t pRemove)
 {
   pinNew = pNew;
   pinAdd = pAdd;
@@ -10,15 +10,17 @@ void Monedero::begin(uint8_t pNew, uint8_t pAdd, uint8_t pRemove)
   bandRemove = false;
   bandAdd = false;
 
-  Pulsador pulsadorAdd;
-  Pulsador pulsadorRemove;
-
-  pinMode(pinAdd, INPUT_PULLUP);
-  pinMode(pinRemove, INPUT);
-  pulsadorAdd.begin(pinAdd, INPUT_PULLUP);
-  pulsadorRemove.begin(pinRemove, INPUT_PULLUP);
+  pulsadorAdd = Pulsador(pinAdd);
+  pulsadorRemove = Pulsador(pinRemove);
 }
 
+void Monedero::begin()
+{
+  pinMode(pinAdd, INPUT_PULLUP);
+  pinMode(pinRemove, INPUT);
+  pulsadorAdd.begin(INPUT_PULLUP);
+  pulsadorRemove.begin(INPUT_PULLUP);
+}
 bool Monedero::operator>(uint8_t cant)
 {
   if (credits > cant)

@@ -11,10 +11,10 @@
 
 const uint8_t UMBRAL_POINT = 20;
 
-#define ECHO_1 3 // attach pin D2 Arduino to pin Echo of HC-SR04
-#define TRIG_1 4 // attach pin D3 Arduino to pin Trig of HC-SR04
-#define ECHO_2 34
-#define TRIG_2 33
+#define ECHO_1 3; // attach pin D2 Arduino to pin Echo of HC-SR04
+#define TRIG_1 4; // attach pin D3 Arduino to pin Trig of HC-SR04
+#define ECHO_2 34;
+#define TRIG_2 33;
 
 #define En1 = 13;
 #define A = 12;
@@ -43,18 +43,20 @@ const uint8_t UMBRAL_POINT = 20;
 #define ARCADE = 2;
 #define ARCADE_LED = 2;
 
-Monedero MyMonedero;
+Game MyGame(9);
+
+Pulsador Arcade(ARCADE, INPUT);
+Led ArcadeLed(ARCADE_LED);
+
+Monedero MyMonedero(NEW_CREDIT, ADD_CREDIT, REMOVE_CREDIT);
+
+SensorUs Sensor_1(TRIG_1, ECHO_1);
+SensorUs Sensor_2(TRIG_2, ECHO_2);
+
+Display8 Display_1(En1, A, B, C, D, E, F, G, H);
+Display8 Display_1(En2, a, b, c, d, e, f, g, h);
 
 Servo MyServo;
-
-SensorUs Sensor_1;
-SensorUs Sensor_2;
-
-Pulsador Arcade;
-Led ArcadeLed;
-
-Display8 Display_1;
-Display8 Display_2;
 
 //byte digitPin[5] = {A0,A1,A2,A3,A4};
 Adafruit_NeoPixel Pixels_1 = Adafruit_NeoPixel(20, 36, NEO_GRB + NEO_KHZ800);
@@ -66,19 +68,21 @@ Game MyGame;
 
 void setup()
 {
-  Arcade.begin(ARCADE, INPUT);
-  ArcadeLed.begin(ARCADE_LED);
+  MyGame.begin();
 
-  MyMonedero.begin(NEW_CREDIT, ADD_CREDIT, REMOVE_CREDIT);
+  Arcade.begin();
+  ArcadeLed.begin();
+
+  MyMonedero.begin();
   attachInterrupt(digitalPinToInterrupt(pinAddCredit), MyMonedero.servicesAdd, RISING);
 
   MyServo.attach(14);
 
-  Sensor_1.begin(TRIG_1, ECHO_1);
-  Sensor_2.begin(TRIG_2, ECHO_2);
+  Sensor_1.begin();
+  Sensor_2.begin();
 
-  Display_1.begin(En1, A, B, C, D, E, F, G, H);
-  Display_1.begin(En2, a, b, c, d, e, f, g, h);
+  Display_1.begin();
+  Display_1.begin();
 
   Pixels_1.begin();
   Pixels_1.setBrightness(50);
@@ -96,8 +100,6 @@ void setup()
 
   zero();
   zero1();
-
-  MyGame.begin(9);
 }
 
 void loop()

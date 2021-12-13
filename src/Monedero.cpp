@@ -1,8 +1,8 @@
 #include <Arduino.h>
+#include <Pulsador.h>
 #include <Monedero.h>
 
-Monedero::Monedero(uint8_t pNew, uint8_t pAdd, uint8_t pRemove)
-{
+Monedero::Monedero(uint8_t pNew, uint8_t pAdd, uint8_t pRemove){
   pinNew = pNew;
   pinAdd = pAdd;
   pinRemove = pRemove;
@@ -10,8 +10,10 @@ Monedero::Monedero(uint8_t pNew, uint8_t pAdd, uint8_t pRemove)
   bandRemove = false;
   bandAdd = false;
 
-  pulsadorAdd = Pulsador(pinAdd);
-  pulsadorRemove = Pulsador(pinRemove);
+  Pulsador pa(pinAdd);
+  pulsadorAdd = pa;
+  Pulsador pr(pinAdd);
+  pulsadorRemove = pr;
 }
 
 void Monedero::begin()
@@ -37,6 +39,7 @@ bool Monedero::operator<(uint8_t cant)
     return false;
 }
 
+// Servicio de monedero activado, detecta vada vez que se inserta un credito con la moneda adecuada.
 void Monedero::loop()
 {
   if (pulsadorAdd.detectShortPressed() && !bandRemove)

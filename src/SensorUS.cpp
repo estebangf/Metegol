@@ -1,18 +1,21 @@
 #include <Arduino.h>
 #include <SensorUS.h>
 
+// Crea un sensor ultrasonico.
 SensorUS::SensorUS(uint8_t trig, uint8_t echo)
 {
   pinTrig = trig;
   pinEcho = echo;
 }
 
+// Formatea el sensor ultrasonico.
 void SensorUS::begin()
 {
   pinMode(pinTrig, OUTPUT);
   pinMode(pinEcho, INPUT);
 }
 
+// Devuelve la distancia medida por el sensor ultrasonico.
 float SensorUS::distancia()
 {
   digitalWrite(pinTrig, HIGH);
@@ -26,9 +29,19 @@ float SensorUS::distancia()
   return d;
 }
 
+// Devuelve si distancia medida por el sensor ultrasonico es mayor a un umbral especifico.
 bool SensorUS::operator>(float umbral)
 {
   if (distancia() > umbral)
+    return true;
+  else
+    return false;
+}
+
+// Devuelve si distancia medida por el sensor ultrasonico es menor a un umbral especifico.
+bool SensorUS::operator<(float umbral)
+{
+  if (distancia() < umbral)
     return true;
   else
     return false;

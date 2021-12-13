@@ -1,8 +1,7 @@
 #pragma once
 
 #include <stdint.h>
-
-#include "Pulsador.h"
+#include <Pulsador.h>
 
 class Monedero
 {

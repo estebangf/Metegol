@@ -14,4 +14,5 @@ public:
   void begin();
   float distancia();
   bool operator>(float umbral);
+  bool operator<(float umbral);
 };

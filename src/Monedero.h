@@ -21,5 +21,6 @@ public:
   bool operator>(uint8_t cant);
   bool operator<(uint8_t cant);
   void loop();
+  void subtractCredit();
   void servicesNew();
 };

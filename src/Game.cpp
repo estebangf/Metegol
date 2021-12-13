@@ -9,6 +9,7 @@ void Game::begin(uint8_t maxP)
   in_play = false;
 
   max_points = maxP;
+  uint8_t timeLastPoint = millis();
 }
 
 void Game::start()
@@ -51,11 +52,17 @@ bool Game::predictedVictoryForTwo()
 
 void Game::pointForPlayerOne()
 {
-  points_1 += 1;
+  if (millis() - timeLastPoint < MAX_TIME)
+    points_1 += 1;
+  if (points_1 >= max_points)
+    end();
 }
 void Game::pointForPlayerTwo()
 {
-  points_2 += 1;
+  if (millis() - timeLastPoint < MAX_TIME)
+    points_2 += 1;
+  if (points_2 >= max_points)
+    end();
 }
 
 uint8_t Game::getPlayerOnePoints()

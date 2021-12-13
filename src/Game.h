@@ -12,6 +12,9 @@ private:
 
   bool in_play = false;
 
+  uint16_t MAX_TIME = 500;
+  uint8_t timeLastPoint;
+
 public:
   void begin(uint8_t maxP);
   void start();

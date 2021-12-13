@@ -9,6 +9,8 @@
 #include "Led.h"
 #include "Game.h"
 
+const uint8_t UMBRAL_POINT = 20;
+
 #define ECHO_1 3 // attach pin D2 Arduino to pin Echo of HC-SR04
 #define TRIG_1 4 // attach pin D3 Arduino to pin Trig of HC-SR04
 #define ECHO_2 34
@@ -102,35 +104,48 @@ void loop()
 {
   MyMonedero.loop();
 
-  if (MyMonedero > 0 && MyGame.inProgress())
+  if (!MyGame.inProgress())
   {
-    ArcadeLed.high();
+    Display_1.show();
+    Display_1.show();
+
+    if (MyMonedero > 0)
+    {
+      ArcadeLed.high();
+      if (Arcade.detectShortPressed())
+      {
+        neo();
+        MyGame.start();
+        MyMonedero.subtractCredit();
+      }
+    }
+    else
+    {
+      ArcadeLed.low();
+    }
   }
   else
   {
-    if (Arcade.detectShortPressed())
+    if (Sensor_1 < UMBRAL_POINT)
     {
-      neo();
-      MyGame.start();
+      neo1();
+      MyGame.pointForPlayerOne();
     }
 
-    ArcadeLed.low();
-  }
+    if (Sensor_2 < UMBRAL_POINT)
+    {
+      neo2();
+      MyGame.pointForPlayerTwo();
+    }
 
-  if (Sensor_1 < 20)
-  {
-    neo1();
-    MyGame.pointForPlayerOne();
-  }
+    if (!MyGame.inProgress())
+    {
+      // ANUNCIAR FIN DEL JUEGO;
+    }
 
-  if (Sensor_2 < 20)
-  {
-    neo2();
-    MyGame.pointForPlayerTwo();
+    Display_1.show(MyGame.getPlayerOnePoints());
+    Display_2.show(MyGame.getPlayerTwoPoints());
   }
-
-  Display_1.show(MyGame.getPlayerOnePoints());
-  Display_1.show(MyGame.getPlayerTwoPoints());
 }
 
 void neo()

@@ -54,6 +54,12 @@ void Monedero::loop()
   else if (!pulsadorRemove.detectShortPressed() && bandRemove)
     bandRemove = false;
 }
+
+void Monedero::subtractCredit()
+{
+  if (credits > 0)
+    credits--;
+}
 void Monedero::servicesNew()
 {
   credits++;

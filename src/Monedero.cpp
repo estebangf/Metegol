@@ -18,10 +18,9 @@ Monedero::Monedero(uint8_t pNew, uint8_t pAdd, uint8_t pRemove){
 
 void Monedero::begin()
 {
-  pinMode(pinAdd, INPUT_PULLUP);
-  pinMode(pinRemove, INPUT);
-  pulsadorAdd.begin(INPUT_PULLUP);
-  pulsadorRemove.begin(INPUT_PULLUP);
+  pinMode(pinNew, INPUT_PULLUP);
+  pulsadorAdd.begin(INPUT);
+  pulsadorRemove.begin(INPUT);
 }
 bool Monedero::operator>(uint8_t cant)
 {

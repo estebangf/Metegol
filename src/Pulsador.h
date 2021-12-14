@@ -20,6 +20,7 @@ private:
   uint8_t pin;
 
 public:
+  Pulsador();
   Pulsador(uint8_t btn);
   void begin(uint8_t mode);
   bool detectShortPressed();

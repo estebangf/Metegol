@@ -6,7 +6,7 @@
 class Monedero
 {
 private:
-  uint8_t pinNew;
+  uint8_t pinNew; // Este pin debe ser si o si uno de estos: 2, 3, 18, 19
   uint8_t pinAdd;
   uint8_t pinRemove;
   uint8_t credits = 0;

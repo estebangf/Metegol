@@ -1,6 +1,11 @@
 #include <Arduino.h>
 #include <Pulsador.h>
 
+Pulsador::Pulsador()
+{
+  STATES STATE_BUTTON = REPOSE;
+}
+
 Pulsador::Pulsador(uint8_t btn)
 {
   STATES STATE_BUTTON = REPOSE;

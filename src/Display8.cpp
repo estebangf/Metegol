@@ -30,7 +30,7 @@ void Display8::begin()
 }
 
 // Apaga por completo el display.
-void Display8::low(uint8_t n)
+void Display8::low()
 {
   digitalWrite(pinEn, LOW);
   digitalWrite(pinA, LOW);

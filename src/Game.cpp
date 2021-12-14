@@ -14,6 +14,7 @@ void Game::begin()
   points_2 = 0;
 
   in_play = false;
+  predicted = false;
 
   uint8_t timeLastPoint = 0;
 }
@@ -32,6 +33,12 @@ void Game::end()
 bool Game::inProgress()
 {
   return in_play;
+}
+
+// Verifica si ya se realizó la predicción.
+bool Game::isPredicted()
+{
+  return predicted;
 }
 
 // Predice si la victoria está decidida para alguno de los dos jugadores.
@@ -66,6 +73,8 @@ void Game::pointForPlayerOne()
 {
   if (millis() - timeLastPoint < MAX_TIME)
     points_1 += 1;
+  if (predictedVictoryForOne())
+    predicted = true;
   if (points_1 >= max_points)
     end();
 }
@@ -75,6 +84,8 @@ void Game::pointForPlayerTwo()
 {
   if (millis() - timeLastPoint < MAX_TIME)
     points_2 += 1;
+  if (predictedVictoryForTwo())
+    predicted = true;
   if (points_2 >= max_points)
     end();
 }

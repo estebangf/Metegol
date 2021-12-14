@@ -11,6 +11,7 @@ private:
   uint8_t max_points;
 
   bool in_play = false;
+  bool predicted = false;
 
   uint16_t MAX_TIME = 500;
   uint8_t timeLastPoint;
@@ -21,6 +22,7 @@ public:
   void start();
   void end();
   bool inProgress();
+  bool isPredicted();
   bool predictedVictory();
   bool predictedVictoryForOne();
   bool predictedVictoryForTwo();

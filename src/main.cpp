@@ -137,6 +137,9 @@ void loop()
       ArcadeLed.high();
       if (Arcade.detectShortPressed())
       {
+        MyServo.attach(90);
+        delay(3000);
+        MyServo.attach(14);
         MyGame.start();
         TiraLed_3.encender();
         MyMonedero.subtractCredit();
@@ -160,7 +163,7 @@ void loop()
       MyGame.pointForPlayerOne();
       TiraLed_1.destellar(5, 500);
       Reproductor.play("gol_p_1.wav");
-      if (MyGame.predictedVictoryForOne())
+      if (MyGame.predictedVictoryForOne() && !MyGame.isPredicted())
         Reproductor.play("predicted_p_1.wav");
     }
 
@@ -169,7 +172,7 @@ void loop()
       MyGame.pointForPlayerTwo();
       TiraLed_2.destellar(5, 500);
       Reproductor.play("gol_p_2.wav");
-      if (MyGame.predictedVictoryForTwo())
+      if (MyGame.predictedVictoryForTwo() && !MyGame.isPredicted())
         Reproductor.play("predicted_p_2.wav");
     }
 
@@ -179,6 +182,7 @@ void loop()
         Reproductor.play("victory_p_1.wav");
       else if (MyGame.predictedVictoryForTwo())
         Reproductor.play("victory_p_2.wav");
+      MyGame.begin();
     }
 
     Display_1.show(MyGame.getPlayerOnePoints());

@@ -54,7 +54,10 @@ bool Game::predictedVictory()
 bool Game::predictedVictoryForOne()
 {
   if (points_1 >= max_points / 2)
+  {
+    predicted = true;
     return true;
+  }
   else
     return false;
 }
@@ -63,7 +66,10 @@ bool Game::predictedVictoryForOne()
 bool Game::predictedVictoryForTwo()
 {
   if (points_1 >= max_points / 2)
+  {
+    predicted = true;
     return true;
+  }
   else
     return false;
 }
@@ -73,9 +79,7 @@ void Game::pointForPlayerOne()
 {
   if (millis() - timeLastPoint < MAX_TIME)
     points_1 += 1;
-  if (predictedVictoryForOne())
-    predicted = true;
-  if (points_1 >= max_points)
+  if (points_1 + points_2 >= max_points)
     end();
 }
 
@@ -84,10 +88,23 @@ void Game::pointForPlayerTwo()
 {
   if (millis() - timeLastPoint < MAX_TIME)
     points_2 += 1;
-  if (predictedVictoryForTwo())
-    predicted = true;
-  if (points_2 >= max_points)
+  if (points_2 + points_1 >= max_points)
     end();
+}
+
+
+// Acredita un punto al jugador uno.
+void Game::pointRestPlayerOne()
+{
+  if (millis() - timeLastPoint < MAX_TIME)
+    points_1 -= 1;
+}
+
+// Acredita un punto al jugador dos.
+void Game::pointRestPlayerTwo()
+{
+  if (millis() - timeLastPoint < MAX_TIME)
+    points_2 -= 1;
 }
 
 // Devuelve los puntos del jugador uno.

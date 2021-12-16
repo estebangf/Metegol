@@ -16,12 +16,13 @@
 #include "Game.h"
 #include "TiraLed.h"
 
-const uint8_t UMBRAL_POINT = 20;
+int8_t UMBRAL_POINT_1;
+int8_t UMBRAL_POINT_2;
 const uint8_t MAX_POINTS = 9;
 const uint8_t INACTIVE_TIME = 15; // Minutos de inactividad para anunciar insentivo
 
-#define ECHO_1 3 // attach pin D2 Arduino to pin Echo of HC-SR04
-#define TRIG_1 4 // attach pin D3 Arduino to pin Trig of HC-SR04
+#define ECHO_1 3
+#define TRIG_1 4
 #define ECHO_2 34
 #define TRIG_2 33
 
@@ -52,7 +53,14 @@ const uint8_t INACTIVE_TIME = 15; // Minutos de inactividad para anunciar insent
 #define ARCADE 2
 #define ARCADE_LED 2
 
+#define BTN_ADD_POINT_1 1 // OUT
+#define BTN_REMOVE_POINT_1 1
+#define BTN_ADD_POINT_2 1
+#define BTN_REMOVE_POINT_2 2
+
 #define SD_PIN 10 // Define el pin para seleccionar la tarjeta SD.
+
+#define SPEAKER 9
 
 TMRpcm Reproductor; //Se crea un objeto de la librería TMRpcm
 
@@ -76,15 +84,20 @@ TiraLed TiraLed_1 = TiraLed(8, 5, NEO_GRB + NEO_KHZ800);   // Porteria 1
 TiraLed TiraLed_2 = TiraLed(8, 31, NEO_GRB + NEO_KHZ800);  // Porteria 2
 TiraLed TiraLed_3 = TiraLed(20, 36, NEO_GRB + NEO_KHZ800); // Escenario
 
+Pulsador AddPoint_1(BTN_ADD_POINT_1);
+Pulsador RemovePoint_1(BTN_REMOVE_POINT_1);
+Pulsador AddPoint_2(BTN_ADD_POINT_2);
+Pulsador RemovePoint_2(BTN_REMOVE_POINT_2);
+
 unsigned long transcurredInactiveTime = 0;
 
 void ServicioMonedero(); // ISR: Rutina de Servicio a la Interrupción
 
 void setup()
 {
-  // Serial.begin(9600);    //Se inicia la comunicación serial
+  Serial.begin(9600);    //Se inicia la comunicación serial
 
-  Reproductor.speakerPin = 9; //Se define el pin en el que está conectada la bocina
+  Reproductor.speakerPin = SPEAKER; //Se define el pin en el que está conectada la bocina
 
   if (!SD.begin(SD_PIN))
   { // see if the card is present and can be initialized:
@@ -111,6 +124,14 @@ void setup()
   TiraLed_1.begin();
   TiraLed_2.begin();
   TiraLed_3.begin();
+
+  Serial.print("Distancia 1 sin bola: ");
+  UMBRAL_POINT_1 = Sensor_1.distancia() - 1;
+  Serial.println(UMBRAL_POINT_1 );
+
+  Serial.print("Distancia 2 sin bola: ");
+  UMBRAL_POINT_2 = Sensor_2.distancia() - 1;
+  Serial.println(UMBRAL_POINT_2 );
 }
 
 void loop()
@@ -143,6 +164,7 @@ void loop()
         MyGame.start();
         TiraLed_3.encender();
         MyMonedero.subtractCredit();
+        Reproductor.play("go_to_play.wav");
       }
     }
     else
@@ -158,21 +180,48 @@ void loop()
     TiraLed_2.loop();
     TiraLed_3.encender();
 
-    if (Sensor_1 < UMBRAL_POINT)
+    if (AddPoint_1.detectShortPressed())
+    {
+      MyGame.pointForPlayerOne();
+      if (!MyGame.isPredicted() && MyGame.predictedVictoryForOne())
+        Reproductor.play("predicted_p_1.wav");
+    }
+    if (AddPoint_2.detectShortPressed())
+    {
+      MyGame.pointForPlayerTwo();
+      if (!MyGame.isPredicted() && MyGame.predictedVictoryForTwo())
+        Reproductor.play("predicted_p_2.wav");
+    }
+
+    
+    if (RemovePoint_1.detectShortPressed())
+    {
+      MyGame.pointRestPlayerOne();
+      if (!MyGame.isPredicted() && MyGame.predictedVictoryForOne())
+        Reproductor.play("predicted_p_1.wav");
+    }
+    if (RemovePoint_2.detectShortPressed())
+    {
+      MyGame.pointRestPlayerTwo();
+      if (!MyGame.isPredicted() && MyGame.predictedVictoryForTwo())
+        Reproductor.play("predicted_p_2.wav");
+    }
+      
+    if (Sensor_1 < UMBRAL_POINT_1)
     {
       MyGame.pointForPlayerOne();
       TiraLed_1.destellar(5, 500);
       Reproductor.play("gol_p_1.wav");
-      if (MyGame.predictedVictoryForOne() && !MyGame.isPredicted())
+      if (!MyGame.isPredicted() && MyGame.predictedVictoryForOne())
         Reproductor.play("predicted_p_1.wav");
     }
 
-    if (Sensor_2 < UMBRAL_POINT)
+    if (Sensor_2 < UMBRAL_POINT_2)
     {
       MyGame.pointForPlayerTwo();
       TiraLed_2.destellar(5, 500);
       Reproductor.play("gol_p_2.wav");
-      if (MyGame.predictedVictoryForTwo() && !MyGame.isPredicted())
+      if (!MyGame.isPredicted() && MyGame.predictedVictoryForTwo())
         Reproductor.play("predicted_p_2.wav");
     }
 

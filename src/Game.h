@@ -13,7 +13,7 @@ private:
   bool in_play = false;
   bool predicted = false;
 
-  uint16_t MAX_TIME = 500;
+  uint16_t MAX_TIME = 1000;
   uint8_t timeLastPoint;
 
 public:
@@ -30,4 +30,6 @@ public:
   uint8_t getPlayerTwoPoints();
   void pointForPlayerOne();
   void pointForPlayerTwo();
+  void pointRestPlayerOne();
+  void pointRestPlayerTwo();
 };

@@ -58,7 +58,7 @@ const uint8_t INACTIVE_TIME = 15; // Minutos de inactividad para anunciar insent
 #define BTN_ADD_POINT_2 1
 #define BTN_REMOVE_POINT_2 2
 
-#define SD_PIN 10 // Define el pin para seleccionar la tarjeta SD.
+#define SD_PIN 53 // Define el pin para seleccionar la tarjeta SD.
 
 #define SPEAKER 9
 
@@ -99,6 +99,9 @@ void setup()
 
   Reproductor.speakerPin = SPEAKER; //Se define el pin en el que está conectada la bocina
 
+  // Descomentar las siguientes dos lineas si no funciona la tarjeta.
+  // pinMode(SD_PIN, OUTPUT);      // DEFINIMOS EL PIN DE LA TARJETA
+  // digitalWrite(SD_PIN, HIGH);   // ACTIVAMOS EL PIN DE LA TARJETA
   if (!SD.begin(SD_PIN))
   { // see if the card is present and can be initialized:
     // Serial.println("Fallo en la tarjeta SD"); //Aviso de que algo no anda bien
